@@ -47,7 +47,6 @@ async function getProviders(id) {
     /Apple TV Channel/i,
     /Netflix Kids/i,
     /Netflix basic with ads/i,
-    /Sky Go/i,
   ];
   return flatrate
     .concat(free)
