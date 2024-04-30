@@ -3,6 +3,8 @@ const _ = require("lodash");
 const fs = require("fs/promises");
 const nlp = require("wink-nlp-utils");
 
+const COUNTRY = "GB";
+
 async function get(path) {
   const baseUrl = "https://api.themoviedb.org/";
   const options = {
@@ -20,7 +22,7 @@ async function get(path) {
 async function getTitle(id) {
   const alternative_titles = await get(`/3/movie/${id}/alternative_titles`);
   const title = alternative_titles.titles.find(
-    (title) => title.iso_3166_1 === "GB" && title.type === "",
+    (title) => title.iso_3166_1 === COUNTRY && title.type === "",
   );
   return title?.title;
 }
@@ -28,24 +30,24 @@ async function getTitle(id) {
 async function getCertification(id) {
   const release_dates = await get(`/3/movie/${id}/release_dates`);
   const result = release_dates.results.find(
-    (result) => result.iso_3166_1 === "GB",
+    (result) => result.iso_3166_1 === COUNTRY,
   );
-  const { certification } = result.release_dates.find(
-    (release_date) => release_date.certification,
-  );
-  return certification === "12A" ? "12" : certification;
+  return _.chain(result?.release_dates)
+    .map((release_date) => release_date.certification)
+    .filter(_.negate(_.isEmpty))
+    .sort()
+    .next().value;
 }
 
 async function getProviders(id) {
   const providers = await get(`/3/movie/${id}/watch/providers`);
-  const flatrate = providers.results.GB?.flatrate || [];
-  const free = providers.results.GB?.free || [];
-  const ads = providers.results.GB?.ads || [];
+  const flatrate = providers.results[COUNTRY]?.flatrate || [];
+  const free = providers.results[COUNTRY]?.free || [];
+  const ads = providers.results[COUNTRY]?.ads || [];
   const ignored = [
     /Amazon Channel/i,
     /Amazon Prime Video with Ads/i,
     /Apple TV Channel/i,
-    /Netflix Kids/i,
     /Netflix basic with ads/i,
   ];
   return flatrate
@@ -64,21 +66,21 @@ async function getDetails(id) {
     getProviders(id),
     getCertification(id),
   ]);
-  details.providers = providers;
-  details.certification = certification;
-
-  if (title && !title.includes(details.title)) {
-    details.title = title;
-  }
 
   const [first, ...rest] = nlp.string.sentences(details.overview);
   let count = first.length;
-  details.overview = [
+  const overview = [
     first,
     ..._.takeWhile(rest, (next) => (count += next.length) < 250),
   ].join(" ");
 
-  return details;
+  return {
+    ...details,
+    providers,
+    certification: certification ?? "?",
+    title: title && !title.includes(details.title) ? title : details.title,
+    overview,
+  };
 }
 
 module.exports = async function () {
