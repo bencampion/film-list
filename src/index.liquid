@@ -3,10 +3,10 @@ layout: default
 title: "Ben's film list"
 ---
 <header>
-  <h1 class="m-2 text-5xl font-light text-stone-200 sm:m-4">Ben's film list</h1>
+  <h1 class="m-2 text-5xl font-light text-neutral-200 sm:m-4">Ben's film list</h1>
   <p class="m-2 sm:m-4">
     An incomplete list of films released since 2010 that I have enjoyed. Provider and certification information is for
-    the <i>United Kingdom</i> and was last updated on <i>{{ 'now' | date: '%d %B %Y' }}</i>.
+    the United Kingdom and was last updated on {{ 'now' | date: '%d %B %Y' }}.
   </p>
 </header>
 
@@ -15,7 +15,7 @@ title: "Ben's film list"
     <label for="genre-select">Genre:</label>
     <select
       id="genre-select"
-      class="m-2 rounded border border-stone-700 bg-stone-800 px-2 py-1"
+      class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
       onchange="filterFilms()"
     >
       <option selected="" value="">All</option>
@@ -29,7 +29,7 @@ title: "Ben's film list"
     <label for="provider-select">Provider:</label>
     <select
       id="provider-select"
-      class="m-2 rounded border border-stone-700 bg-stone-800 px-2 py-1"
+      class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
       onchange="filterFilms()"
     >
       <option selected="" value="">All</option>
@@ -48,21 +48,22 @@ title: "Ben's film list"
   {% assign sorted_films = tmdb.films | sort: 'title' %}
   {% for film in sorted_films %}
     <article
-      class="flex flex-col rounded bg-stone-900 text-xs"
+      class="flex flex-col rounded bg-neutral-900 text-xs"
       data-genre="{{ film.genres | slice: 0, 3 | map: 'id' | join: ' '}}"
       data-provider="{{ film.providers | map: "provider_id" | join: " " }}"
     >
-      <h2 class="m-2 truncate text-lg font-medium text-stone-200">
+      <h2 class="m-2 truncate text-lg font-medium text-neutral-200">
         <a class="hover:underline" href="https://www.themoviedb.org/movie/{{ film.id }}">{{ film.title }}</a>
       </h2>
-      <img
-        class="order-first w-full rounded-t"
-        src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"
-        loading="lazy"
-        alt=""
-      >
+      <a class="order-first" href="https://www.themoviedb.org/movie/{{ film.id }}"
+        ><img
+          class="w-full rounded-t"
+          src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"
+          loading="lazy"
+          alt=""
+      ></a>
       <ul class="mx-2 flex items-center">
-        <li class="mr-2 inline-block text-nowrap rounded border border-stone-500 px-1">{{ film.certification }}</li>
+        <li class="mr-2 inline-block text-nowrap rounded border border-neutral-500 px-1">{{ film.certification }}</li>
         <li class="text-nowrap after:content-['_•\a0']">{{ film.release_date | date: '%Y' }}</li>
         <li class="text-nowrap after:content-['_•\a0']">
           {% if film.runtime > 60 %}{{ film.runtime | divided_by: 60 | floor }}h {% endif -%}
@@ -73,28 +74,30 @@ title: "Ben's film list"
         </li>
       </ul>
       <p class="mx-2 mt-2 line-clamp-4 flex-grow">{{ film.overview }}</p>
-      <ul class="m-2 flex items-center gap-2 border-t border-t-stone-700 pt-2 sm:min-h-10">
+      <ul class="m-2 flex items-center gap-2 border-t border-t-neutral-700 pt-2 sm:min-h-10">
         {% if film.providers.size > 0 %}
           {% for provider in film.providers %}
             <li>
-              <img
-                class="rounded"
-                src="https://image.tmdb.org/t/p/original{{provider.logo_path}}"
-                alt="{{ provider.provider_name }}"
-                width="32"
-                height="32"
-              >
+              <a href="{{ film.providers_link }}">
+                <img
+                  class="rounded"
+                  src="https://image.tmdb.org/t/p/original{{provider.logo_path}}"
+                  alt="{{ provider.provider_name }}"
+                  width="32"
+                  height="32"
+                >
+              </a>
             </li>
           {% endfor %}
         {% else %}
-          <li class="italic text-stone-500">Currently not streaming in the UK.</li>
+          <li class="italic text-neutral-500">Currently not streaming in the UK.</li>
         {% endif %}
       </ul>
     </article>
   {% endfor %}
 </main>
 
-<hr class="mx-2 my-4 border-stone-700 sm:mx-4">
+<hr class="mx-2 my-4 border-neutral-700 sm:mx-4">
 
 <footer class="mx-2 mb-2 mt-4 flex items-center gap-4 text-xs sm:mx-4 sm:mb-4">
   <a href="https://www.themoviedb.org/" class="flex-none"
@@ -106,9 +109,9 @@ title: "Ben's film list"
   ></a>
   <span>
     This webpage uses the
-    <a href="https://developer.themoviedb.org/" class="text-stone-200 hover:underline">TMDB API</a>, but is not endorsed
-    or certified by TMDB. Provider information provided by
-    <a href="https://www.justwatch.com/" class="text-stone-200 hover:underline">JustWatch</a> (via the TMDB API).
+    <a href="https://developer.themoviedb.org/" class="text-neutral-200 hover:underline">TMDB API</a>, but is not
+    endorsed or certified by TMDB. Provider information provided by
+    <a href="https://www.justwatch.com/" class="text-neutral-200 hover:underline">JustWatch</a> (via the TMDB API).
   </span>
 </footer>
 

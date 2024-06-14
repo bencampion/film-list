@@ -50,13 +50,16 @@ async function getProviders(id) {
     /Apple TV Channel/i,
     /Netflix basic with ads/i,
   ];
-  return flatrate
-    .concat(free)
-    .concat(ads)
-    .filter(
-      (provider) =>
-        !ignored.some((regexp) => provider.provider_name.match(regexp)),
-    );
+  return {
+    providers_link: providers.results[COUNTRY]?.link,
+    providers: flatrate
+      .concat(free)
+      .concat(ads)
+      .filter(
+        (provider) =>
+          !ignored.some((regexp) => provider.provider_name.match(regexp)),
+      ),
+  };
 }
 
 async function getDetails(id) {
@@ -76,7 +79,7 @@ async function getDetails(id) {
 
   return {
     ...details,
-    providers,
+    ...providers,
     certification: certification ?? "?",
     title: title && !title.includes(details.title) ? title : details.title,
     overview,
