@@ -12,7 +12,7 @@ if (!process.env.TMDB_ACCESS_TOKEN) {
 async function get(path) {
   const baseUrl = "https://api.themoviedb.org/";
   const options = {
-    duration: "1d",
+    duration: "18h",
     type: "json",
     fetchOptions: {
       headers: {
