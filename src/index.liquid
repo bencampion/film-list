@@ -1,134 +1,147 @@
----
-layout: default
-title: "Ben's film list"
----
-<header>
-  <h1 class="m-2 text-5xl font-light text-neutral-200 sm:m-4">Ben's film list</h1>
-  <p class="m-2 sm:m-4">
-    An incomplete list of films released since 2010 that I have enjoyed. Provider and certification information is for
-    the United Kingdom and was last updated on {{ 'now' | date: '%d %B %Y' }}.
-  </p>
-</header>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+    <title>Ben's film list</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23737373' class='bi bi-film' viewBox='0 0 16 16'%3E%3Cpath d='M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z'/%3E%3C/svg%3E"
+    >
+  </head>
+  <body class="mx-auto max-w-screen-2xl bg-neutral-950 text-neutral-400">
+    <header>
+      <h1 class="m-2 text-5xl font-light text-neutral-200 sm:m-4">Ben's film list</h1>
+      <p class="m-2 sm:m-4">
+        An incomplete list of films released since 2010 that I have enjoyed. Provider and certification information is
+        for the United Kingdom and was last updated on {{ 'now' | date: '%d %B %Y' }}.
+      </p>
+    </header>
 
-<nav hidden class="mx-2 flex flex-wrap gap-x-4 sm:mx-4">
-  <div class="flex items-center">
-    <label for="genre-select">Genre:</label>
-    <select
-      id="genre-select"
-      class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
-      onchange="filterFilms()"
-    >
-      <option selected="" value="">All</option>
-      {% assign sorted_genres = tmdb.genres | sort: 'name' %}
-      {% for genre in sorted_genres %}
-        <option value="{{ genre.id }}">{{ genre.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="flex items-center">
-    <label for="provider-select">Provider:</label>
-    <select
-      id="provider-select"
-      class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
-      onchange="filterFilms()"
-    >
-      <option selected="" value="">All</option>
-      {% assign sorted_providers = tmdb.providers | sort: 'provider_name' %}
-      {% for provider in sorted_providers %}
-        <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-</nav>
-
-<main
-  id="film-list"
-  class="m-2 grid grid-cols-1 gap-4 sm:m-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
->
-  {% assign sorted_films = tmdb.films | sort: 'title' %}
-  {% for film in sorted_films %}
-    <article
-      class="flex flex-col rounded bg-neutral-900 text-xs"
-      data-genre="{{ film.genres | slice: 0, 3 | map: 'id' | join: ' '}}"
-      data-provider="{{ film.providers | map: "provider_id" | join: " " }}"
-    >
-      <h2 class="m-2 truncate text-lg font-medium text-neutral-200">
-        <a class="hover:underline" href="https://www.themoviedb.org/movie/{{ film.id }}">{{ film.title }}</a>
-      </h2>
-      <a class="order-first" href="https://www.themoviedb.org/movie/{{ film.id }}"
-        ><img
-          class="w-full rounded-t"
-          src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"
-          loading="lazy"
-          alt=""
-      ></a>
-      <ul class="mx-2 flex items-center">
-        <li class="mr-2 inline-block text-nowrap rounded border border-neutral-500 px-1">{{ film.certification }}</li>
-        <li class="text-nowrap after:content-['_•\a0']">{{ film.release_date | date: '%Y' }}</li>
-        <li class="text-nowrap after:content-['_•\a0']">
-          {% if film.runtime > 60 %}{{ film.runtime | divided_by: 60 | floor }}h {% endif -%}
-          {{- film.runtime | modulo: 60 }}m
-        </li>
-        <li class="truncate">
-          {{ film.genres | slice: 0, 3 | map: 'name' | join: ' / ' | replace: 'Science Fiction', 'Sci-Fi' }}
-        </li>
-      </ul>
-      <p class="mx-2 mt-2 line-clamp-4 flex-grow">{{ film.overview }}</p>
-      <ul class="m-2 flex items-center gap-2 border-t border-t-neutral-700 pt-2 sm:min-h-10">
-        {% if film.providers.size > 0 %}
-          {% for provider in film.providers %}
-            <li>
-              <a href="{{ film.providers_link }}">
-                <img
-                  class="rounded"
-                  src="https://image.tmdb.org/t/p/original{{provider.logo_path}}"
-                  alt="{{ provider.provider_name }}"
-                  width="32"
-                  height="32"
-                >
-              </a>
-            </li>
+    <nav hidden class="mx-2 flex flex-wrap gap-x-4 sm:mx-4">
+      <div class="flex items-center">
+        <label for="genre-select">Genre:</label>
+        <select
+          id="genre-select"
+          class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
+          onchange="filterFilms()"
+        >
+          <option selected="" value="">All</option>
+          {% assign sorted_genres = tmdb.genres | sort: 'name' %}
+          {% for genre in sorted_genres %}
+            <option value="{{ genre.id }}">{{ genre.name }}</option>
           {% endfor %}
-        {% else %}
-          <li class="italic text-neutral-500">Currently not streaming in the UK.</li>
-        {% endif %}
-      </ul>
-    </article>
-  {% endfor %}
-</main>
+        </select>
+      </div>
+      <div class="flex items-center">
+        <label for="provider-select">Provider:</label>
+        <select
+          id="provider-select"
+          class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
+          onchange="filterFilms()"
+        >
+          <option selected="" value="">All</option>
+          {% assign sorted_providers = tmdb.providers | sort: 'provider_name' %}
+          {% for provider in sorted_providers %}
+            <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </nav>
 
-<hr class="mx-2 my-4 border-neutral-700 sm:mx-4">
+    <main
+      id="film-list"
+      class="m-2 grid grid-cols-1 gap-4 sm:m-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    >
+      {% assign sorted_films = tmdb.films | sort: 'title' %}
+      {% for film in sorted_films %}
+        <article
+          class="flex flex-col rounded bg-neutral-900 text-xs"
+          data-genre="{{ film.genres | slice: 0, 3 | map: 'id' | join: ' '}}"
+          data-provider="{{ film.providers | map: "provider_id" | join: " " }}"
+        >
+          <h2 class="m-2 truncate text-lg font-medium text-neutral-200">
+            <a class="hover:underline" href="https://www.themoviedb.org/movie/{{ film.id }}">{{ film.title }}</a>
+          </h2>
+          <a class="order-first" href="https://www.themoviedb.org/movie/{{ film.id }}"
+            ><img
+              class="w-full rounded-t"
+              src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"
+              loading="lazy"
+              alt=""
+          ></a>
+          <ul class="mx-2 flex items-center">
+            <li class="mr-2 inline-block text-nowrap rounded border border-neutral-500 px-1">
+              {{ film.certification }}
+            </li>
+            <li class="text-nowrap after:content-['_•\a0']">{{ film.release_date | date: '%Y' }}</li>
+            <li class="text-nowrap after:content-['_•\a0']">
+              {% if film.runtime > 60 %}{{ film.runtime | divided_by: 60 | floor }}h {% endif -%}
+              {{- film.runtime | modulo: 60 }}m
+            </li>
+            <li class="truncate">
+              {{ film.genres | slice: 0, 3 | map: 'name' | join: ' / ' | replace: 'Science Fiction', 'Sci-Fi' }}
+            </li>
+          </ul>
+          <p class="mx-2 mt-2 line-clamp-4 flex-grow">{{ film.overview }}</p>
+          <ul class="m-2 flex items-center gap-2 border-t border-t-neutral-700 pt-2 sm:min-h-10">
+            {% if film.providers.size > 0 %}
+              {% for provider in film.providers %}
+                <li>
+                  <a href="{{ film.providers_link }}">
+                    <img
+                      class="rounded"
+                      src="https://image.tmdb.org/t/p/original{{provider.logo_path}}"
+                      alt="{{ provider.provider_name }}"
+                      width="32"
+                      height="32"
+                    >
+                  </a>
+                </li>
+              {% endfor %}
+            {% else %}
+              <li class="italic text-neutral-500">Currently not streaming in the UK.</li>
+            {% endif %}
+          </ul>
+        </article>
+      {% endfor %}
+    </main>
 
-<footer class="mx-2 mb-2 mt-4 flex items-center gap-4 text-xs sm:mx-4 sm:mb-4">
-  <a href="https://www.themoviedb.org/" class="flex-none"
-    ><img
-      alt="The Movie Database"
-      height="8"
-      width="62"
-      src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
-  ></a>
-  <span>
-    This webpage uses the
-    <a href="https://developer.themoviedb.org/" class="text-neutral-200 hover:underline">TMDB API</a>, but is not
-    endorsed or certified by TMDB. Provider information provided by
-    <a href="https://www.justwatch.com/" class="text-neutral-200 hover:underline">JustWatch</a> (via the TMDB API).
-  </span>
-</footer>
+    <hr class="mx-2 my-4 border-neutral-700 sm:mx-4">
 
-<script>
-  function filterFilms() {
-    const genreId = document.querySelector('#genre-select').value;
-    const providerId = document.querySelector('#provider-select').value;
-    for (const element of document.querySelector('#film-list').children) {
-      if (genreId && !element.dataset.genre.split(' ').includes(genreId)) {
-        element.hidden = true;
-      } else if (providerId && !element.dataset.provider.split(' ').includes(providerId)) {
-        element.hidden = true;
-      } else {
-        element.hidden = false;
+    <footer class="mx-2 mb-2 mt-4 flex items-center gap-4 text-xs sm:mx-4 sm:mb-4">
+      <a href="https://www.themoviedb.org/" class="flex-none"
+        ><img
+          alt="The Movie Database"
+          height="8"
+          width="62"
+          src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+      ></a>
+      <span>
+        This webpage uses the
+        <a href="https://developer.themoviedb.org/" class="text-neutral-200 hover:underline">TMDB API</a>, but is not
+        endorsed or certified by TMDB. Provider information provided by
+        <a href="https://www.justwatch.com/" class="text-neutral-200 hover:underline">JustWatch</a> (via the TMDB API).
+      </span>
+    </footer>
+
+    <script>
+      function filterFilms() {
+        const genreId = document.querySelector('#genre-select').value;
+        const providerId = document.querySelector('#provider-select').value;
+        for (const element of document.querySelector('#film-list').children) {
+          if (genreId && !element.dataset.genre.split(' ').includes(genreId)) {
+            element.hidden = true;
+          } else if (providerId && !element.dataset.provider.split(' ').includes(providerId)) {
+            element.hidden = true;
+          } else {
+            element.hidden = false;
+          }
+        }
       }
-    }
-  }
 
-  document.querySelector('nav').hidden = false;
-</script>
+      document.querySelector('nav').hidden = false;
+    </script>
+  </body>
+</html>
