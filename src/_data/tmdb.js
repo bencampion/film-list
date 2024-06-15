@@ -12,7 +12,7 @@ async function get(path) {
     type: "json",
     fetchOptions: {
       headers: {
-        Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
       },
     },
   };
