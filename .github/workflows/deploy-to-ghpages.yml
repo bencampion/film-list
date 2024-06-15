@@ -43,7 +43,7 @@ jobs:
       - name: Build site
         env:
           TMDB_ACCESS_TOKEN: ${{ secrets.TMDB_ACCESS_TOKEN }}
-        run: npx --no @11ty/eleventy --pathprefix="${{ steps.pages.outputs.base_path }}"
+        run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
