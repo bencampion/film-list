@@ -5,6 +5,10 @@ const nlp = require("wink-nlp-utils");
 
 const COUNTRY = "GB";
 
+if (!process.env.TMDB_ACCESS_TOKEN) {
+  throw new Error("TMDB_ACCESS_TOKEN is not set in environment");
+}
+
 async function get(path) {
   const baseUrl = "https://api.themoviedb.org/";
   const options = {
