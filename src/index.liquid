@@ -62,9 +62,9 @@
           data-provider="{{ film.providers | map: "provider_id" | join: " " }}"
         >
           <h2 class="m-2 truncate text-lg font-medium text-neutral-200">
-            <a class="hover:underline" href="https://www.themoviedb.org/movie/{{ film.id }}">{{ film.title }}</a>
+            <a class="hover:underline" href="{{ film.link }}">{{ film.title }}</a>
           </h2>
-          <a class="order-first" href="https://www.themoviedb.org/movie/{{ film.id }}"
+          <a class="order-first" href="{{ film.link }}"
             ><img
               class="w-full rounded-t"
               src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"

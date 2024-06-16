@@ -66,7 +66,8 @@ async function getProviders(id) {
   };
 }
 
-async function getDetails(id) {
+async function getDetails(url) {
+  const id = url.match(/\d+/)[0];
   const [details, title, providers, certification] = await Promise.all([
     get(`/3/movie/${id}`),
     getTitle(id),
@@ -87,17 +88,14 @@ async function getDetails(id) {
     certification: certification ?? "?",
     title: title && !title.includes(details.title) ? title : details.title,
     overview,
+    link: url,
   };
 }
 
 module.exports = async function () {
-  const urls = await fs.readFile("src/_data/films.txt", { encoding: "utf-8" });
-  const ids = _.chain(urls)
-    .split("\n")
-    .filter(_.negate(_.isEmpty))
-    .map((url) => url.match(/\d+/)[0])
-    .value();
-  const films = await Promise.all(ids.map(getDetails));
+  const file = await fs.readFile("src/_data/films.txt", { encoding: "utf-8" });
+  const urls = file.split("\n").filter(_.negate(_.isEmpty));
+  const films = await Promise.all(urls.map(getDetails));
 
   const genres = _.chain(films)
     .flatMap((film) => film.genres)
