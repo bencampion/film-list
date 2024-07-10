@@ -45,6 +45,7 @@ jobs:
           restore-keys: eleventy-fetch-cache-
       - name: Build site
         env:
+          NODE_ENV: production
           TMDB_ACCESS_TOKEN: ${{ secrets.TMDB_ACCESS_TOKEN }}
         run: npm run build
       - name: Upload artifact

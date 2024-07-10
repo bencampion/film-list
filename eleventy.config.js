@@ -1,16 +1,11 @@
-const prettier = require("prettier");
+const postcss = require("./config/postcss");
+const prettier = require("./config/prettier");
 
 module.exports = function (eleventyConfig) {
-  eleventyConfig.setServerOptions({
-    watch: ["_site/**/*.css"],
-  });
-
-  eleventyConfig.addTransform("prettier", function (content) {
-    if (this.page.outputPath?.endsWith(".html")) {
-      return prettier.format(content, { parser: "html" });
-    }
-    return content;
-  });
+  eleventyConfig.addPlugin(prettier);
+  eleventyConfig.addPlugin(postcss);
+  eleventyConfig.addWatchTarget("./postcss.config.js");
+  eleventyConfig.addWatchTarget("./tailwind.config.js");
 
   return {
     dir: {

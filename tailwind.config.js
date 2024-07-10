@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./_site/**/*.html"],
+  content: ["./src/**/*.liquid"],
   theme: {
     screens: {
       sm: "640px",
