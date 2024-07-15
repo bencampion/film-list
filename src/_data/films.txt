@@ -97,3 +97,6 @@ https://www.themoviedb.org/movie/383498-deadpool-2
 https://www.themoviedb.org/movie/315635-spider-man-homecoming
 https://www.themoviedb.org/movie/693134-dune-part-two
 https://www.themoviedb.org/movie/76341-mad-max-fury-road
+https://www.themoviedb.org/movie/1056360-american-fiction
+https://www.themoviedb.org/movie/194662-birdman-or-the-unexpected-virtue-of-ignorance
+https://www.themoviedb.org/movie/614934-elvis
