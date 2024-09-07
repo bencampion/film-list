@@ -49,10 +49,10 @@ async function getProviders(id) {
   const free = providers.results[COUNTRY]?.free || [];
   const ads = providers.results[COUNTRY]?.ads || [];
   const ignored = [
-    /Amazon Channel/i,
-    /Amazon Prime Video with Ads/i,
-    /Apple TV Channel/i,
-    /Netflix basic with ads/i,
+    /.*with ads/i,
+    /BFI Player.*Channel/,
+    /Paramount.*Channel/,
+    /MUBI.*Channel/,
   ];
   return {
     providers_link: providers.results[COUNTRY]?.link,
@@ -62,7 +62,14 @@ async function getProviders(id) {
       .filter(
         (provider) =>
           !ignored.some((regexp) => provider.provider_name.match(regexp)),
-      ),
+      )
+      .map((provider) => ({
+        ...provider,
+        provider_name:
+          provider.provider_name === "STUDIOCANAL PRESENTS Apple TV Channel"
+            ? "Studiocanal Presents Apple TV Channel"
+            : provider.provider_name,
+      })),
   };
 }
 
