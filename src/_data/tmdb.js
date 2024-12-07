@@ -50,9 +50,10 @@ async function getProviders(id) {
   const ads = providers.results[COUNTRY]?.ads || [];
   const ignored = [
     /.*with ads/i,
+    /Apple TV Plus.*Channel/,
     /BFI Player.*Channel/,
-    /Paramount.*Channel/,
     /MUBI.*Channel/,
+    /Paramount.*Channel/,
   ];
   return {
     providers_link: providers.results[COUNTRY]?.link,
