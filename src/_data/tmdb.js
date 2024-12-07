@@ -1,7 +1,7 @@
-const EleventyFetch = require("@11ty/eleventy-fetch");
-const _ = require("lodash");
-const fs = require("fs/promises");
-const nlp = require("wink-nlp-utils");
+import EleventyFetch from "@11ty/eleventy-fetch";
+import _ from "lodash";
+import fs from "fs/promises";
+import nlp from "wink-nlp-utils";
 
 const COUNTRY = "GB";
 
@@ -99,7 +99,7 @@ async function getDetails(url) {
   };
 }
 
-module.exports = async function () {
+export default async function () {
   const file = await fs.readFile("src/_data/films.txt", { encoding: "utf-8" });
   const urls = file.split("\n").filter(_.negate(_.isEmpty));
   const films = await Promise.all(urls.map(getDetails));
@@ -115,4 +115,4 @@ module.exports = async function () {
     .value();
 
   return { films, genres, providers };
-};
+}

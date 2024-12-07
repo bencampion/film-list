@@ -1,7 +1,8 @@
-const postcss = require("postcss");
-const postcssrc = require("postcss-load-config");
+import postcss from "postcss";
+import postcssrc from "postcss-load-config";
 
-module.exports = function (eleventyConfig) {
+/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+export default function (eleventyConfig) {
   let options, processor;
   eleventyConfig.on("eleventy.before", async () => {
     const config = await postcssrc();
@@ -23,4 +24,4 @@ module.exports = function (eleventyConfig) {
       };
     },
   });
-};
+}

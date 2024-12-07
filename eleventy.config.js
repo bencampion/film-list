@@ -1,7 +1,8 @@
-const postcss = require("./config/postcss");
-const prettier = require("./config/prettier");
+import postcss from "./config/postcss.js";
+import prettier from "./config/prettier.js";
 
-module.exports = function (eleventyConfig) {
+/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+export default function (eleventyConfig) {
   eleventyConfig.addPlugin(prettier);
   eleventyConfig.addPlugin(postcss);
   eleventyConfig.addWatchTarget("./postcss.config.js");
@@ -12,4 +13,4 @@ module.exports = function (eleventyConfig) {
       input: "src",
     },
   };
-};
+}

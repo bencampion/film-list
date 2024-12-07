@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+const config = {
   content: ["./src/**/*.liquid"],
   theme: {
     screens: {
@@ -12,3 +13,5 @@ module.exports = {
   },
   plugins: [],
 };
+
+export default config;

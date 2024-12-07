@@ -1,6 +1,7 @@
 {
   "name": "film-list",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "eleventy",
     "prettier:check": "prettier . --check",
@@ -8,8 +9,8 @@
     "start": "eleventy --serve"
   },
   "dependencies": {
-    "@11ty/eleventy": "^2.0.1",
-    "@11ty/eleventy-fetch": "^4.0.1",
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-fetch": "^5.0.1",
     "@shopify/prettier-plugin-liquid": "^1.4.4",
     "autoprefixer": "^10.4.19",
     "cssnano": "^7.0.4",

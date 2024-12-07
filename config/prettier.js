@@ -1,10 +1,11 @@
-const prettier = require("prettier");
+import prettier from "prettier";
 
-module.exports = function (eleventyConfig) {
+/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+export default function (eleventyConfig) {
   eleventyConfig.addTransform("prettier", function (content) {
     if (this.page.outputPath?.endsWith(".html")) {
       return prettier.format(content, { parser: "html" });
     }
     return content;
   });
-};
+}
