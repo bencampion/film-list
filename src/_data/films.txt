@@ -101,3 +101,5 @@ https://www.themoviedb.org/movie/1056360-american-fiction
 https://www.themoviedb.org/movie/194662-birdman-or-the-unexpected-virtue-of-ignorance
 https://www.themoviedb.org/movie/614934-elvis
 https://www.themoviedb.org/movie/244786-whiplash
+https://www.themoviedb.org/movie/800158-the-killer
+https://www.themoviedb.org/movie/724665-confess-fletch
