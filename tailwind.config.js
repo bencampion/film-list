@@ -1,7 +1,12 @@
+import colors from "tailwindcss/colors";
+
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: ["./src/**/*.liquid"],
   theme: {
+    colors: {
+      grey: colors.neutral,
+    },
     screens: {
       sm: "640px",
       md: "960px",

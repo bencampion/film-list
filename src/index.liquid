@@ -10,9 +10,9 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23737373' class='bi bi-film' viewBox='0 0 16 16'%3E%3Cpath d='M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z'/%3E%3C/svg%3E"
     >
   </head>
-  <body class="mx-auto max-w-screen-2xl bg-neutral-950 text-neutral-400">
+  <body class="bg-grey-950 text-grey-400 mx-auto max-w-screen-2xl">
     <header>
-      <h1 class="m-2 text-5xl font-light text-neutral-200 sm:m-4">Ben's film list</h1>
+      <h1 class="text-grey-200 m-2 text-5xl font-light sm:m-4">Ben's film list</h1>
       <p class="m-2 sm:m-4">
         An incomplete list of films released since 2010 that I have enjoyed. Provider and certification information is
         for the United Kingdom and was last updated on {{ 'now' | date: '%d %B %Y' }}.
@@ -24,7 +24,7 @@
         <label for="genre-select">Genre:</label>
         <select
           id="genre-select"
-          class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
+          class="border-grey-700 bg-grey-800 m-2 rounded border px-2 py-1"
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
@@ -38,7 +38,7 @@
         <label for="provider-select">Provider:</label>
         <select
           id="provider-select"
-          class="m-2 rounded border border-neutral-700 bg-neutral-800 px-2 py-1"
+          class="border-grey-700 bg-grey-800 m-2 rounded border px-2 py-1"
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
@@ -57,22 +57,23 @@
       {% assign sorted_films = tmdb.films | sort: 'title' %}
       {% for film in sorted_films %}
         <article
-          class="flex flex-col rounded bg-neutral-900 text-xs"
+          class="bg-grey-900 flex flex-col rounded text-xs"
           data-genre="{{ film.genres | slice: 0, 3 | map: 'id' | join: ' '}}"
           data-provider="{{ film.providers | map: "provider_id" | join: " " }}"
         >
-          <h2 class="m-2 truncate text-lg font-medium text-neutral-200">
-            <a class="hover:underline" href="{{ film.link }}">{{ film.title }}</a>
-          </h2>
-          <a class="order-first" href="{{ film.link }}"
-            ><img
-              class="w-full rounded-t"
+          <a href="{{ film.link }}" class="flex flex-col">
+            <h2 class="m-2 truncate text-lg font-medium">
+              {{ film.title }}
+            </h2>
+            <img
+              class="order-first block w-full rounded-t"
               src="https://image.tmdb.org/t/p/w500{{ film.backdrop_path }}"
               loading="lazy"
               alt=""
-          ></a>
+            >
+          </a>
           <ul class="mx-2 flex items-center">
-            <li class="mr-2 inline-block text-nowrap rounded border border-neutral-500 px-1">
+            <li class="border-grey-500 mr-2 inline-block text-nowrap rounded border px-1">
               {{ film.certification }}
             </li>
             <li class="text-nowrap after:content-['_•\a0']">{{ film.release_date | date: '%Y' }}</li>
@@ -85,7 +86,7 @@
             </li>
           </ul>
           <p class="mx-2 mt-2 line-clamp-4 flex-grow">{{ film.overview }}</p>
-          <ul class="m-2 flex items-center gap-2 border-t border-t-neutral-700 pt-2 sm:min-h-10">
+          <ul class="border-t-grey-700 m-2 flex items-center gap-2 border-t pt-2 sm:min-h-10">
             {% if film.providers.size > 0 %}
               {% for provider in film.providers %}
                 <li>
@@ -101,14 +102,14 @@
                 </li>
               {% endfor %}
             {% else %}
-              <li class="italic text-neutral-500">Currently not streaming in the UK.</li>
+              <li class="italic">Currently not streaming in the UK.</li>
             {% endif %}
           </ul>
         </article>
       {% endfor %}
     </main>
 
-    <hr class="mx-2 my-4 border-neutral-700 sm:mx-4">
+    <hr class="border-grey-700 mx-2 my-4 sm:mx-4">
 
     <footer class="mx-2 mb-2 mt-4 flex items-center gap-4 text-xs sm:mx-4 sm:mb-4">
       <a href="https://www.themoviedb.org/" class="flex-none"
@@ -120,9 +121,8 @@
       ></a>
       <span>
         This webpage uses the
-        <a href="https://developer.themoviedb.org/" class="text-neutral-200 hover:underline">TMDB API</a>, but is not
-        endorsed or certified by TMDB. Provider information provided by
-        <a href="https://www.justwatch.com/" class="text-neutral-200 hover:underline">JustWatch</a> (via the TMDB API).
+        <a href="https://developer.themoviedb.org/">TMDB API</a>, but is not endorsed or certified by TMDB. Provider
+        information provided by <a href="https://www.justwatch.com/">JustWatch</a> (via the TMDB API).
       </span>
     </footer>
 
