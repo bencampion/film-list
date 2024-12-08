@@ -23,14 +23,6 @@ async function get(path) {
   return EleventyFetch(new URL(path, baseUrl).href, options);
 }
 
-async function getTitle(id) {
-  const alternative_titles = await get(`/3/movie/${id}/alternative_titles`);
-  const title = alternative_titles.titles.find(
-    (title) => title.iso_3166_1 === COUNTRY && title.type === "",
-  );
-  return title?.title;
-}
-
 async function getCertification(id) {
   const release_dates = await get(`/3/movie/${id}/release_dates`);
   const result = release_dates.results.find(
@@ -48,37 +40,25 @@ async function getProviders(id) {
   const flatrate = providers.results[COUNTRY]?.flatrate || [];
   const free = providers.results[COUNTRY]?.free || [];
   const ads = providers.results[COUNTRY]?.ads || [];
-  const ignored = [
-    /.*with ads/i,
-    /Apple TV Plus.*Channel/,
-    /BFI Player.*Channel/,
-    /MUBI.*Channel/,
-    /Paramount.*Channel/,
-  ];
   return {
     providers_link: providers.results[COUNTRY]?.link,
     providers: flatrate
       .concat(free)
       .concat(ads)
-      .filter(
-        (provider) =>
-          !ignored.some((regexp) => provider.provider_name.match(regexp)),
-      )
       .map((provider) => ({
         ...provider,
-        provider_name:
-          provider.provider_name === "STUDIOCANAL PRESENTS Apple TV Channel"
-            ? "Studiocanal Presents Apple TV Channel"
-            : provider.provider_name,
+        provider_name: provider.provider_name.replace(
+          "STUDIOCANAL PRESENTS",
+          "Studiocanal Presents",
+        ),
       })),
   };
 }
 
 async function getDetails(url) {
   const id = url.match(/\d+/)[0];
-  const [details, title, providers, certification] = await Promise.all([
+  const [details, providers, certification] = await Promise.all([
     get(`/3/movie/${id}`),
-    getTitle(id),
     getProviders(id),
     getCertification(id),
   ]);
@@ -94,7 +74,6 @@ async function getDetails(url) {
     ...details,
     ...providers,
     certification: certification ?? "?",
-    title: title && !title.includes(details.title) ? title : details.title,
     overview,
     link: url,
   };
