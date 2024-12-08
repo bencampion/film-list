@@ -88,7 +88,8 @@
           <p class="mx-2 mt-2 line-clamp-4 flex-grow">{{ film.overview }}</p>
           <ul class="border-t-grey-700 m-2 flex items-center gap-2 border-t pt-2 sm:min-h-10">
             {% if film.providers.size > 0 %}
-              {% for provider in film.providers %}
+              {% assign sorted_providers = film.providers | sort: 'provider_name' %}
+              {% for provider in sorted_providers %}
                 <li>
                   <a href="{{ film.providers_link }}">
                     <img
