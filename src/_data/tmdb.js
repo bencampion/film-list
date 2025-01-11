@@ -37,21 +37,38 @@ async function getCertification(id) {
 
 async function getProviders(id) {
   const providers = await get(`/3/movie/${id}/watch/providers`);
-  const flatrate = providers.results[COUNTRY]?.flatrate || [];
-  const free = providers.results[COUNTRY]?.free || [];
-  const ads = providers.results[COUNTRY]?.ads || [];
+  const allProviders = [
+    ...(providers.results[COUNTRY]?.flatrate ?? []),
+    ...(providers.results[COUNTRY]?.free ?? []),
+    ...(providers.results[COUNTRY]?.ads ?? []),
+  ];
   return {
     providers_link: providers.results[COUNTRY]?.link,
-    providers: flatrate
-      .concat(free)
-      .concat(ads)
+    providers: allProviders
       .map((provider) => ({
         ...provider,
         provider_name: provider.provider_name.replace(
           "STUDIOCANAL PRESENTS",
           "Studiocanal Presents",
         ),
-      })),
+      }))
+      .filter(({ provider_name }) => {
+        if (
+          provider_name.match(
+            /(amazon channel|apple tv channel|with ads|premium)\s*$/i,
+          )
+        ) {
+          return (
+            provider_name !== "Paramount+ Amazon Channel" &&
+            !allProviders.some(
+              (other) =>
+                other.provider_name !== provider_name &&
+                provider_name.startsWith(other.provider_name),
+            )
+          );
+        }
+        return true;
+      }),
   };
 }
 
