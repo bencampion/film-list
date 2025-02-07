@@ -3,5 +3,5 @@
 @tailwind base;
 
 a {
-  @apply text-grey-200 underline decoration-grey-400 underline-offset-4 hover:decoration-grey-200 hover:decoration-1;
+  @apply text-grey-900 underline decoration-grey-500 decoration-dotted decoration-1 underline-offset-4 hover:decoration-grey-900 hover:decoration-solid hover:decoration-1 dark:text-grey-200 dark:decoration-grey-400  hover:dark:decoration-grey-200;
 }
