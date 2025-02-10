@@ -16,7 +16,6 @@
     "cssnano": "^7.0.4",
     "lodash": "^4.17.21",
     "postcss": "^8.4.39",
-    "postcss-load-config": "^6.0.1",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.0",
