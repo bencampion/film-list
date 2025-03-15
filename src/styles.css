@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
   --breakpoint-sm: 640px;
@@ -9,5 +9,5 @@
 }
 
 a {
-  @apply text-neutral-900 underline decoration-neutral-500 decoration-dotted decoration-1 underline-offset-4 hover:decoration-neutral-900 hover:decoration-solid hover:decoration-1 dark:text-neutral-200 dark:decoration-neutral-400  dark:hover:decoration-neutral-200;
+  @apply text-neutral-900 underline decoration-neutral-500 decoration-dotted decoration-1 underline-offset-4 hover:decoration-neutral-900 hover:decoration-solid hover:decoration-1 dark:text-neutral-200 dark:decoration-neutral-400 dark:hover:decoration-neutral-200;
 }

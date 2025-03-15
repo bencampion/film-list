@@ -1,7 +1,7 @@
+import tailwind from "@tailwindcss/postcss";
 import cssnano from "cssnano";
 import postcss from "postcss";
 import prettier from "prettier";
-import tailwind from "@tailwindcss/postcss";
 
 /** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
 export default function (eleventyConfig) {

@@ -1,6 +1,6 @@
+import fs from "fs/promises";
 import EleventyFetch from "@11ty/eleventy-fetch";
 import _ from "lodash";
-import fs from "fs/promises";
 import nlp from "wink-nlp-utils";
 
 const COUNTRY = "GB";
