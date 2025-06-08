@@ -55,16 +55,15 @@ async function getProviders(id) {
       .filter(({ provider_name }) => {
         if (
           provider_name.match(
-            /(amazon channel|apple tv channel|with ads|premium)\s*$/i,
+            /(amazon channel|apple tv channel|kids|premium|with ads)\s*$/i,
           )
         ) {
-          return (
-            provider_name !== "Paramount+ Amazon Channel" &&
-            !allProviders.some(
-              (other) =>
-                other.provider_name !== provider_name &&
-                provider_name.startsWith(other.provider_name),
-            )
+          return !allProviders.some(
+            (other) =>
+              other.provider_name !== provider_name &&
+              provider_name
+                .replace(" Plus", "+")
+                .startsWith(other.provider_name.replace(" Plus", "+")),
           );
         }
         return true;
