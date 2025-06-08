@@ -52,22 +52,16 @@ async function getProviders(id) {
           "Studiocanal Presents",
         ),
       }))
-      .filter(({ provider_name }) => {
-        if (
-          provider_name.match(
-            /(amazon channel|apple tv channel|kids|premium|with ads)\s*$/i,
-          )
-        ) {
-          return !allProviders.some(
+      .filter(
+        ({ provider_name }) =>
+          !allProviders.some(
             (other) =>
               other.provider_name !== provider_name &&
               provider_name
                 .replace(" Plus", "+")
                 .startsWith(other.provider_name.replace(" Plus", "+")),
-          );
-        }
-        return true;
-      }),
+          ),
+      ),
   };
 }
 
