@@ -3,7 +3,7 @@ import cssnano from "cssnano";
 import postcss from "postcss";
 import prettier from "prettier";
 
-/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+/** @param {import("@11ty/eleventy/UserConfig").default} eleventyConfig */
 export default function (eleventyConfig) {
   eleventyConfig.addTransform("prettier", function (content) {
     if (this.page.outputPath?.endsWith(".html")) {
