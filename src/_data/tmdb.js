@@ -77,7 +77,7 @@ async function getDetails(url) {
   let count = first.length;
   const overview = [
     first,
-    ..._.takeWhile(rest, (next) => (count += next.length) < 250),
+    ..._.takeWhile(rest, (next) => (count += next.length) < 270),
   ].join(" ");
 
   return {
