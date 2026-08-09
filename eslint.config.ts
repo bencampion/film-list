@@ -5,9 +5,10 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import importPlugin from "eslint-plugin-import";
 import ymlPLugin from "eslint-plugin-yml";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  globalIgnores(["_site/**", ".cache/**"]),
+  globalIgnores(["_site/**", ".cache/**", "types/tmdb.d.ts"]),
   {
     extends: [js.configs.recommended],
     files: ["**/*.{js,mjs,cjs}"],
@@ -19,6 +20,27 @@ export default defineConfig(
       "import/order": [
         "error",
         { alphabetize: { order: "asc", caseInsensitive: true } },
+      ],
+    },
+  },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["**/*.{ts,mts,cts}"],
+    languageOptions: {
+      globals: globals.node,
+      parserOptions: {
+        projectService: true,
+      },
+    },
+    plugins: { import: importPlugin },
+    rules: {
+      "import/order": [
+        "error",
+        { alphabetize: { order: "asc", caseInsensitive: true } },
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
       ],
     },
   },
