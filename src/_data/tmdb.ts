@@ -86,22 +86,14 @@ async function getProviders(id: number) {
   ];
   return {
     providers_link: country?.link,
-    providers: allProviders
-      .map((provider) => ({
-        ...provider,
-        provider_name: (provider.provider_name ?? "").replace(
-          "STUDIOCANAL PRESENTS",
-          "Studiocanal Presents",
+    providers: allProviders.filter(
+      ({ provider_name }) =>
+        !allProviders.some(
+          (other) =>
+            other.provider_name !== provider_name &&
+            provider_name?.startsWith(other.provider_name ?? ""),
         ),
-      }))
-      .filter(
-        ({ provider_name }) =>
-          !allProviders.some(
-            (other) =>
-              (other.provider_name ?? "") !== provider_name &&
-              provider_name.startsWith(other.provider_name ?? ""),
-          ),
-      ),
+    ),
   };
 }
 

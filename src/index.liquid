@@ -21,11 +21,11 @@
     </header>
 
     <nav hidden class="mx-2 flex flex-wrap gap-x-4 sm:mx-4">
-      <div class="flex items-center">
+      <div class="flex max-w-full items-center">
         <label for="genre-select">Genre:</label>
         <select
           id="genre-select"
-          class="m-2 rounded-sm border border-neutral-300 bg-neutral-200 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800"
+          class="m-2 truncate rounded-sm border border-neutral-300 bg-neutral-200 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800"
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
@@ -34,11 +34,11 @@
           {% endfor %}
         </select>
       </div>
-      <div class="flex items-center">
+      <div class="flex max-w-full items-center">
         <label for="provider-select">Provider:</label>
         <select
           id="provider-select"
-          class="m-2 rounded-sm border border-neutral-300 bg-neutral-200 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800"
+          class="m-2 truncate rounded-sm border border-neutral-300 bg-neutral-200 px-2 py-1 dark:border-neutral-700 dark:bg-neutral-800"
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
