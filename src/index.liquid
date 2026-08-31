@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-    <title>Ben's film list</title>
+    <title>Ben’s film list</title>
     <link rel="stylesheet" href="styles.css">
     <link
       rel="icon"
@@ -13,7 +13,7 @@
   </head>
   <body class="mx-auto max-w-screen-2xl bg-white text-neutral-600 dark:bg-neutral-950 dark:text-neutral-400">
     <header>
-      <h1 class="m-2 text-5xl font-light text-neutral-900 sm:m-4 dark:text-neutral-200">Ben's film list</h1>
+      <h1 class="m-2 text-5xl font-light text-neutral-900 sm:m-4 dark:text-neutral-200">Ben’s film list</h1>
       <p class="m-2 sm:m-4">
         An incomplete list of films released since 2010 that I have enjoyed. Provider and certification information is
         for the United Kingdom and was last updated on {{ 'now' | date: '%d %B %Y' }}.
@@ -29,8 +29,7 @@
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
-          {% assign sorted_genres = tmdb.genres | sort: 'name' %}
-          {% for genre in sorted_genres %}
+          {% for genre in tmdb.genres %}
             <option value="{{ genre.id }}">{{ genre.name }}</option>
           {% endfor %}
         </select>
@@ -43,8 +42,7 @@
           onchange="filterFilms()"
         >
           <option selected="" value="">All</option>
-          {% assign sorted_providers = tmdb.providers | sort: 'provider_name' %}
-          {% for provider in sorted_providers %}
+          {% for provider in tmdb.providers %}
             <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
           {% endfor %}
         </select>
@@ -55,8 +53,7 @@
       id="film-list"
       class="m-2 grid grid-cols-1 gap-4 sm:m-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
     >
-      {% assign sorted_films = tmdb.films | sort: 'title' %}
-      {% for film in sorted_films %}
+      {% for film in tmdb.films %}
         <article
           class="flex flex-col rounded-sm bg-neutral-100 text-xs dark:bg-neutral-900"
           data-genre="{{ film.genres | slice: 0, 3 | map: 'id' | join: ' '}}"
@@ -89,8 +86,7 @@
           <p class="mx-2 mt-2 line-clamp-4 grow">{{ film.overview }}</p>
           <ul class="m-2 flex items-center gap-2 border-t border-t-neutral-300 pt-2 sm:min-h-10 dark:border-t-neutral-700">
             {% if film.providers.size > 0 %}
-              {% assign sorted_providers = film.providers | sort: 'provider_name' %}
-              {% for provider in sorted_providers %}
+              {% for provider in film.providers %}
                 <li>
                   <a href="{{ film.providers_link }}">
                     <img

@@ -54,20 +54,22 @@ const client = createClient<paths>({
   },
 });
 
-async function getCertification(id: number): Promise<string | undefined> {
-  const release_dates = await client.GET("/3/movie/{movie_id}/release_dates", {
-    params: { path: { movie_id: id } },
-  });
-
-  const result = release_dates.data?.results?.find(
-    (entry) => entry.iso_3166_1 === COUNTRY,
+async function getCertification(id: number) {
+  const allReleaseDates = await client.GET(
+    "/3/movie/{movie_id}/release_dates",
+    { params: { path: { movie_id: id } } },
   );
-  return _.chain(result?.release_dates)
-    .map((release_date) => release_date.certification)
-    .filter(_.negate(_.isEmpty))
-    .sort()
-    .head()
-    .value();
+
+  const releaseDates = allReleaseDates.data?.results?.find(
+    (entry) => entry.iso_3166_1 === COUNTRY,
+  )?.release_dates;
+
+  const certification =
+    releaseDates
+      ?.map((release_date) => release_date.certification)
+      .filter(Boolean)[0] ?? "?";
+
+  return certification;
 }
 
 async function getProviders(id: number) {
@@ -97,9 +99,7 @@ async function getProviders(id: number) {
           !allProviders.some(
             (other) =>
               (other.provider_name ?? "") !== provider_name &&
-              provider_name
-                .replace(" Plus", "+")
-                .startsWith((other.provider_name ?? "").replace(" Plus", "+")),
+              provider_name.startsWith(other.provider_name ?? ""),
           ),
       ),
   };
@@ -115,12 +115,7 @@ function trimParagraph(text: string, minChars: number) {
   return sentences.join(" ");
 }
 
-async function getDetails(url: string) {
-  const match = url.match(/\d+/);
-  if (!match) {
-    throw new Error(`Could not find movie id in url: ${url}`);
-  }
-  const id = Number(match[0]);
+async function getFilm({ id, link }: { id: number; link: string }) {
   const [details, providers, certification] = await Promise.all([
     client.GET("/3/movie/{movie_id}", {
       params: { path: { movie_id: id } },
@@ -132,25 +127,45 @@ async function getDetails(url: string) {
   return {
     ...details.data,
     ...providers,
-    certification: certification ?? "?",
+    certification,
     overview: trimParagraph(details.data?.overview ?? "", 270),
-    link: url,
+    link,
   };
 }
 
-export default async function () {
+async function readFilmList() {
   const file = await fs.readFile("src/_data/films.txt", { encoding: "utf-8" });
-  const urls = file.split("\n").filter(_.negate(_.isEmpty));
-  const films = await Promise.all(urls.map(getDetails));
+  return file
+    .split("\n")
+    .filter(Boolean)
+    .map((link) => {
+      const match = link.match(/\d+/);
+      if (!match) {
+        throw new Error(`Could not find movie id in link: ${link}`);
+      }
+      const id = Number(match[0]);
+      return { id, link };
+    });
+}
+
+export default async function () {
+  const ids = await readFilmList();
+
+  const films = _.sortBy(
+    await Promise.all(ids.map(getFilm)),
+    (film) => film.title,
+  );
 
   const genres = _.chain(films)
     .flatMap((film) => film.genres ?? [])
     .uniqBy((genre) => genre.id)
+    .sortBy((genre) => genre.name)
     .value();
 
   const providers = _.chain(films)
     .flatMap((film) => film.providers)
     .uniqBy((provider) => provider.provider_id)
+    .sortBy((provider) => provider.provider_name)
     .value();
 
   return { films, genres, providers };
