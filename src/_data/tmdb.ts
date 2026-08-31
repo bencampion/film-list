@@ -56,10 +56,10 @@ async function getCertification(id: number): Promise<string | undefined> {
     params: { path: { movie_id: id } },
   });
 
-  const result = release_dates.data!.results!.find(
+  const result = release_dates.data?.results?.find(
     (entry) => entry.iso_3166_1 === COUNTRY,
   );
-  return _.chain(result!.release_dates)
+  return _.chain(result?.release_dates)
     .map((release_date) => release_date.certification)
     .filter(_.negate(_.isEmpty))
     .sort()
@@ -71,11 +71,13 @@ async function getProviders(id: number) {
   const providers = await client.GET("/3/movie/{movie_id}/watch/providers", {
     params: { path: { movie_id: id } },
   });
-  const country = providers.data!.results![COUNTRY] as CountryProviders;
+  const country = providers.data?.results?.[COUNTRY] as
+    | CountryProviders
+    | undefined;
   const allProviders = [
-    ...(country.flatrate ?? []),
-    ...(country.free ?? []),
-    ...(country.ads ?? []),
+    ...(country?.flatrate ?? []),
+    ...(country?.free ?? []),
+    ...(country?.ads ?? []),
   ];
   return {
     providers_link: country?.link,
@@ -114,7 +116,7 @@ async function getDetails(url: string) {
     getCertification(id),
   ]);
 
-  const [first, ...rest] = nlp.string.sentences(details.data!.overview ?? "");
+  const [first, ...rest] = nlp.string.sentences(details.data?.overview ?? "");
   let count = first.length;
   const overview = [
     first,
