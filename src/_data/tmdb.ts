@@ -2,10 +2,13 @@ import fs from "node:fs/promises";
 import EleventyFetch from "@11ty/eleventy-fetch";
 import _ from "lodash";
 import createClient from "openapi-fetch";
-import nlp from "wink-nlp-utils";
+import model from "wink-eng-lite-web-model";
+import winkNLP from "wink-nlp";
 import type { paths } from "../../types/tmdb.js";
 
 const COUNTRY = "GB";
+
+const nlp = winkNLP(model);
 
 type WatchProviders =
   paths["/3/movie/{movie_id}/watch/providers"]["get"]["responses"][200]["content"]["application/json"];
@@ -102,6 +105,16 @@ async function getProviders(id: number) {
   };
 }
 
+function trimParagraph(text: string, minChars: number) {
+  const [first, ...rest] = nlp.readDoc(text).sentences().out();
+  let count = first.length;
+  const sentences = [
+    first,
+    ..._.takeWhile(rest, (next) => (count += next.length) < minChars),
+  ];
+  return sentences.join(" ");
+}
+
 async function getDetails(url: string) {
   const match = url.match(/\d+/);
   if (!match) {
@@ -116,18 +129,11 @@ async function getDetails(url: string) {
     getCertification(id),
   ]);
 
-  const [first, ...rest] = nlp.string.sentences(details.data?.overview ?? "");
-  let count = first.length;
-  const overview = [
-    first,
-    ..._.takeWhile(rest, (next) => (count += next.length) < 270),
-  ].join(" ");
-
   return {
     ...details.data,
     ...providers,
     certification: certification ?? "?",
-    overview,
+    overview: trimParagraph(details.data?.overview ?? "", 270),
     link: url,
   };
 }

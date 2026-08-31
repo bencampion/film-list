@@ -38,12 +38,3 @@ declare module "@11ty/eleventy-fetch" {
     },
   ): Promise<EleventyFetchResponse>;
 }
-
-declare module "wink-nlp-utils" {
-  const nlp: {
-    string: {
-      sentences: (text: string) => string[];
-    };
-  };
-  export default nlp;
-}
