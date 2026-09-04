@@ -46,7 +46,7 @@ async function getFilm({ id, link }: { id: number; link: string }) {
   const certification =
     releaseDates
       ?.map((release_date) => release_date.certification)
-      .filter(Boolean)[0] ?? "?";
+      .find(Boolean) ?? "?";
 
   return {
     ...details,
@@ -64,7 +64,7 @@ async function readFilmList() {
     .split("\n")
     .filter(Boolean)
     .map((link) => {
-      const match = link.match(/\d+/);
+      const match = /\d+/.exec(link);
       if (!match) {
         throw new Error(`Could not find movie id in link: ${link}`);
       }

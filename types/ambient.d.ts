@@ -1,9 +1,3 @@
-declare module "eslint-plugin-import" {
-  import type { ESLint } from "eslint";
-  const plugin: ESLint.Plugin;
-  export default plugin;
-}
-
 declare module "@11ty/eleventy/UserConfig" {
   // Minimal surface for this project; Eleventy ships JSDoc, not full .d.ts.
   interface UserConfig {

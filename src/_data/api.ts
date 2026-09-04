@@ -32,13 +32,13 @@ type RawWatchProviders =
 type Provider = NonNullable<
   NonNullable<NonNullable<RawWatchProviders["results"]>["GB"]>["flatrate"]
 >[number];
-type AllMonetization = {
+interface AllMonetization {
   flatrate?: Provider[];
   free?: Provider[];
   ads?: Provider[];
   rent?: Provider[];
   buy?: Provider[];
-};
+}
 type WatchProviders = Omit<RawWatchProviders, "results"> & {
   results?: {
     [C in keyof NonNullable<RawWatchProviders["results"]>]?: NonNullable<

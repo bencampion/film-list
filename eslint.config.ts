@@ -2,8 +2,9 @@ import js from "@eslint/js";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import { defineConfig, globalIgnores } from "eslint/config";
-import importPlugin from "eslint-plugin-import";
-import ymlPLugin from "eslint-plugin-yml";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import { importX } from "eslint-plugin-import-x";
+import ymlPlugin from "eslint-plugin-yml";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -11,37 +12,26 @@ export default defineConfig(
   globalIgnores(["_site/**", ".cache/**", "types/tmdb.d.ts"]),
   {
     extends: [js.configs.recommended],
-    files: ["**/*.{js,mjs,cjs}"],
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
     languageOptions: {
       globals: globals.node,
     },
-    plugins: { import: importPlugin },
+    plugins: { "import-x": importX },
     rules: {
-      "import/order": [
+      "import-x/order": [
         "error",
         { alphabetize: { order: "asc", caseInsensitive: true } },
       ],
     },
   },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: [
+      tseslint.configs.recommendedTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+    ],
     files: ["**/*.{ts,mts,cts}"],
     languageOptions: {
-      globals: globals.node,
-      parserOptions: {
-        projectService: true,
-      },
-    },
-    plugins: { import: importPlugin },
-    rules: {
-      "import/order": [
-        "error",
-        { alphabetize: { order: "asc", caseInsensitive: true } },
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_" },
-      ],
+      parserOptions: { projectService: true },
     },
   },
   {
@@ -57,12 +47,13 @@ export default defineConfig(
   },
   {
     extends: [
-      ymlPLugin.configs["flat/standard"],
-      ymlPLugin.configs["flat/prettier"],
+      ymlPlugin.configs["flat/standard"],
+      ymlPlugin.configs["flat/prettier"],
     ],
     files: ["**/*.{yml,yaml}"],
     rules: {
       "yml/no-empty-mapping-value": "off",
     },
   },
+  eslintConfigPrettier,
 );
