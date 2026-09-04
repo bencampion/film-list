@@ -1,5 +1,7 @@
-import EleventyFetch from "@11ty/eleventy-fetch";
+import Keyv from "keyv";
+import { KeyvFile } from "keyv-file";
 import createClient from "openapi-fetch";
+import pThrottle from "p-throttle";
 
 import type { paths } from "../../types/tmdb.js";
 
@@ -7,28 +9,21 @@ if (!process.env.TMDB_ACCESS_TOKEN) {
   throw new Error("TMDB_ACCESS_TOKEN is not set in environment");
 }
 
+const cache = new Keyv<Movie>({
+  store: new KeyvFile({ filename: ".cache", separatedFile: true }),
+  ttl: 18 * 60 * 60 * 1000,
+});
+
+const throttle = pThrottle({ limit: 20, interval: 1000 });
+
 const client = createClient<paths>({
   baseUrl: "https://api.themoviedb.org",
   headers: {
     Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
   },
-  fetch: async (request: Request) => {
-    const cached = await EleventyFetch(request.url, {
-      duration: "18h",
-      type: "json",
-      returnType: "response",
-      fetchOptions: {
-        method: request.method,
-        headers: Object.fromEntries(request.headers),
-      },
-    });
-
-    return new Response(JSON.stringify(cached.body), {
-      status: cached.status ?? 200,
-      headers: cached.headers,
-    });
-  },
+  fetch: throttle(fetch),
 });
+
 type ReleaseDates =
   paths["/3/movie/{movie_id}/release_dates"]["get"]["responses"]["200"]["content"]["application/json"];
 
@@ -53,12 +48,18 @@ type WatchProviders = Omit<RawWatchProviders, "results"> & {
   };
 };
 
-type AppendToResponse = {
-  release_dates?: ReleaseDates;
-  "watch/providers"?: WatchProviders;
-};
+type Movie =
+  paths["/3/movie/{movie_id}"]["get"]["responses"]["200"]["content"]["application/json"] & {
+    release_dates?: ReleaseDates;
+    "watch/providers"?: WatchProviders;
+  };
 
-export async function getMovie(id: number) {
+export async function getMovie(id: number): Promise<Movie> {
+  const cached = await cache.get(String(id));
+  if (cached) {
+    return cached;
+  }
+
   const { data, response } = await client.GET("/3/movie/{movie_id}", {
     params: {
       path: { movie_id: id },
@@ -68,5 +69,7 @@ export async function getMovie(id: number) {
   if (!response.ok || data === undefined) {
     throw new Error(`Failed to get movie ${id}: ${response.status}`);
   }
-  return data as typeof data & AppendToResponse;
+
+  await cache.set(String(id), data);
+  return data;
 }

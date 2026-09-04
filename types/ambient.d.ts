@@ -17,24 +17,3 @@ declare module "@11ty/eleventy/UserConfig" {
   }
   export default UserConfig;
 }
-
-declare module "@11ty/eleventy-fetch" {
-  interface EleventyFetchResponse {
-    url?: string;
-    status?: number;
-    headers?: Record<string, string>;
-    body: unknown;
-    cache?: "hit" | "miss";
-  }
-
-  export default function EleventyFetch(
-    url: string,
-    options?: {
-      duration?: string;
-      type?: "json" | "text" | "buffer" | "xml" | "parsed-xml";
-      returnType?: "response";
-      fetchOptions?: RequestInit;
-      [key: string]: unknown;
-    },
-  ): Promise<EleventyFetchResponse>;
-}
