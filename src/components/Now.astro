@@ -1,0 +1,7 @@
+---
+const now = new Date();
+---
+
+<time datetime={now.toISOString()}>
+  {now.toLocaleDateString("en-GB", { dateStyle: "long" })}
+</time>

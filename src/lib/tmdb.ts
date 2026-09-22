@@ -2,11 +2,15 @@ import fs from "node:fs/promises";
 import _ from "lodash";
 import model from "wink-eng-lite-web-model";
 import winkNLP from "wink-nlp";
-import { getMovie } from "./api.ts";
+import { getMovie } from "./api";
 
 const COUNTRY = "GB";
 
 const nlp = winkNLP(model);
+
+export type Film = Awaited<ReturnType<typeof getFilm>>;
+export type Provider = Film["providers"][number];
+export type Genre = NonNullable<Film["genres"]>[number];
 
 function trimParagraph(text: string, minChars: number) {
   const [first, ...rest] = nlp.readDoc(text).sentences().out();
@@ -19,13 +23,9 @@ function trimParagraph(text: string, minChars: number) {
 }
 
 async function getFilm({ id, link }: { id: number; link: string }) {
-  const {
-    release_dates: allReleaseDates,
-    "watch/providers": allWatchProviders,
-    ...details
-  } = await getMovie(id);
+  const movie = await getMovie(id);
 
-  const monetization = allWatchProviders?.results?.[COUNTRY];
+  const monetization = movie["watch/providers"]?.results?.[COUNTRY];
   const providers = [
     ...(monetization?.flatrate ?? []),
     ...(monetization?.free ?? []),
@@ -40,7 +40,7 @@ async function getFilm({ id, link }: { id: number; link: string }) {
       ),
   );
 
-  const releaseDates = allReleaseDates?.results?.find(
+  const releaseDates = movie.release_dates?.results?.find(
     (entry) => entry.iso_3166_1 === COUNTRY,
   )?.release_dates;
   const certification =
@@ -49,17 +49,21 @@ async function getFilm({ id, link }: { id: number; link: string }) {
       .find(Boolean) ?? "?";
 
   return {
-    ...details,
+    title: movie.title,
+    backdrop_path: movie.backdrop_path,
+    release_date: movie.release_date,
+    runtime: movie.runtime,
+    genres: movie.genres,
+    overview: trimParagraph(movie.overview ?? "", 270),
     providers_link: monetization?.link,
     providers: dedupedProviders,
     certification,
-    overview: trimParagraph(details.overview ?? "", 270),
     link,
   };
 }
 
 async function readFilmList() {
-  const file = await fs.readFile("src/_data/films.txt", { encoding: "utf-8" });
+  const file = await fs.readFile("src/data/films.txt", { encoding: "utf-8" });
   return file
     .split("\n")
     .filter(Boolean)

@@ -6,14 +6,14 @@ A website containing an incomplete list of films released since 2010 that I have
 
 ## Details
 
-The site is generated using [Eleventy](https://www.11ty.dev/) with data fetched from [The Movie Database (TMDB) API](https://developer.themoviedb.org/). It is styled using [Tailwind CSS](https://tailwindcss.com/).
+The site is generated using [Astro](https://astro.build/) with data fetched from [The Movie Database (TMDB) API](https://developer.themoviedb.org/). It is styled using [Tailwind CSS](https://tailwindcss.com/).
 
 ## Building
 
 Dev mode:
 
 ```console
-$ npm run start
+$ npm run dev
 ```
 
 Production build:

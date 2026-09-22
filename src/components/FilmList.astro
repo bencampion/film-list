@@ -1,0 +1,73 @@
+---
+import Film from "../components/Film.astro";
+import getData from "../lib/tmdb";
+
+const { films, genres, providers } = await getData();
+---
+
+<search class="flex flex-col gap-2">
+  <form id="filter-form" class="flex flex-wrap gap-x-4 gap-y-2">
+    <div class="flex max-w-full items-center gap-x-2">
+      <label for="genre-select">Genre:</label>
+      <select
+        id="genre-select"
+        class="truncate rounded-sm border border-neutral-300 bg-neutral-200 p-1 dark:border-neutral-700 dark:bg-neutral-800"
+      >
+        <option selected="" value=""> All </option>
+        {genres.map((genre) => <option value={genre.id}>{genre.name}</option>)}
+      </select>
+    </div>
+    <div class="flex max-w-full items-center gap-x-2">
+      <label for="provider-select">Provider:</label>
+      <select
+        id="provider-select"
+        class="truncate rounded-sm border border-neutral-300 bg-neutral-200 p-1 dark:border-neutral-700 dark:bg-neutral-800"
+      >
+        <option selected="" value=""> All </option>
+        {
+          providers.map((provider) => (
+            <option value={provider.provider_id}>
+              {provider.provider_name}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+  </form>
+  <p role="status" class="text-xs">
+    Showing <span id="visible-count">{films.length}</span> of {films.length} films.
+  </p>
+</search>
+
+<main
+  id="film-list"
+  class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+>
+  {films.map((film) => <Film film={film} />)}
+</main>
+
+<script>
+  document.querySelector("#filter-form")?.addEventListener("change", () => {
+    const genreId =
+      document.querySelector<HTMLSelectElement>("#genre-select")?.value;
+    const providerId =
+      document.querySelector<HTMLSelectElement>("#provider-select")?.value;
+    const filmList =
+      document.querySelectorAll<HTMLElement>("#film-list article");
+
+    let visible = 0;
+    for (const film of filmList) {
+      const matchesGenre =
+        !genreId || film.matches(`[data-genre~="${genreId}"]`);
+      const matchesProvider =
+        !providerId || film.matches(`[data-provider~="${providerId}"]`);
+      film.hidden = !(matchesGenre && matchesProvider);
+      if (!film.hidden) visible++;
+    }
+
+    const status = document.querySelector("#visible-count");
+    if (status) {
+      status.textContent = String(visible);
+    }
+  });
+</script>

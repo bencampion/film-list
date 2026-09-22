@@ -1,0 +1,96 @@
+---
+import type { Film } from "../lib/tmdb.js";
+
+interface Props {
+  film: Film;
+}
+
+const { film } = Astro.props;
+const genres = film.genres?.map((genre) => genre.id).join(" ");
+const providers = film.providers
+  ?.map((provider) => provider.provider_id)
+  .join(" ");
+---
+
+<article
+  class="flex flex-col gap-2 overflow-hidden rounded-sm bg-neutral-100 p-2 text-xs dark:bg-neutral-900"
+  data-genre={genres}
+  data-provider={providers}
+>
+  <a href={film.link} class="-mx-2 -mt-2 flex flex-col">
+    <h2 class="mx-2 mt-2 text-lg font-medium">{film.title}</h2>
+    <img
+      class="order-first block w-full"
+      src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`}
+      alt=""
+      width={500}
+      height={281}
+      loading="lazy"
+    />
+  </a>
+  <ul class="flex items-center">
+    <li
+      class="mr-2 inline-block rounded-sm border border-neutral-300 px-1 text-nowrap dark:border-neutral-700"
+    >
+      <span class="sr-only">Certificate </span>
+      {film.certification}
+    </li>
+    {
+      film.release_date && (
+        <li class="text-nowrap after:content-['_•\a0']">
+          <time datetime={film.release_date}>
+            {new Date(film.release_date).getFullYear()}
+          </time>
+        </li>
+      )
+    }
+    {
+      film.runtime && (
+        <li class="text-nowrap after:content-['_•\a0']">
+          <time datetime={`PT${film.runtime}M`}>
+            {new Intl.DurationFormat("en-GB", {
+              style: "narrow",
+              minutesDisplay: "always",
+            }).format({
+              hours: Math.floor(film.runtime / 60),
+              minutes: film.runtime % 60,
+            })}
+          </time>
+        </li>
+      )
+    }
+    <li>
+      {
+        film.genres
+          ?.slice(0, 3)
+          .map((genre) => genre.name)
+          .join(" / ")
+          .replace("Science Fiction", "Sci-Fi")
+      }
+    </li>
+  </ul>
+  <p class="grow">{film.overview}</p>
+  <ul
+    class="flex items-center gap-2 border-t border-t-neutral-300 pt-2 sm:min-h-10 dark:border-t-neutral-700"
+  >
+    {
+      film.providers?.length ? (
+        film.providers.map((provider) => (
+          <li>
+            <a href={film.providers_link}>
+              <img
+                class="rounded-sm"
+                src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`}
+                alt={provider.provider_name ?? ""}
+                width={32}
+                height={32}
+              />
+            </a>
+          </li>
+        ))
+      ) : (
+        <li class="italic">Currently not streaming in the UK.</li>
+      )
+    }
+  </ul>
+</article>
