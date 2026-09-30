@@ -1,13 +1,32 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light dark;
+}
+
 @theme {
   --breakpoint-sm: 720px;
   --breakpoint-md: 1080px;
   --breakpoint-lg: 1440px;
   --breakpoint-xl: 1800px;
   --breakpoint-2xl: 2160px;
+
+  --color-page: light-dark(var(--color-white), var(--color-neutral-950));
+  --color-card: light-dark(var(--color-neutral-100), var(--color-neutral-900));
+  --color-control: light-dark(
+    var(--color-neutral-200),
+    var(--color-neutral-800)
+  );
+  --color-ink: light-dark(var(--color-neutral-600), var(--color-neutral-400));
+  --color-ink-strong: light-dark(
+    var(--color-neutral-900),
+    var(--color-neutral-200)
+  );
+  --color-line: light-dark(var(--color-neutral-300), var(--color-neutral-700));
 }
 
-a {
-  @apply text-neutral-900 underline decoration-neutral-500 decoration-dotted decoration-1 underline-offset-4 hover:decoration-neutral-900 hover:decoration-solid hover:decoration-1 dark:text-neutral-200 dark:decoration-neutral-400 dark:hover:decoration-neutral-200;
+@layer base {
+  a {
+    @apply text-ink-strong underline decoration-ink decoration-dotted decoration-1 underline-offset-4 hover:decoration-ink-strong hover:decoration-solid hover:decoration-1;
+  }
 }

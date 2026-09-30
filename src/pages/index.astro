@@ -17,12 +17,10 @@ import Tmdb from "./tmdb.svg";
     />
   </head>
   <body
-    class="mx-auto flex max-w-screen-2xl flex-col gap-4 bg-white p-2 text-neutral-600 sm:p-4 dark:bg-neutral-950 dark:text-neutral-400"
+    class="mx-auto flex max-w-screen-2xl flex-col gap-4 bg-page p-2 text-ink sm:p-4"
   >
     <header class="flex flex-col gap-2 sm:gap-4">
-      <h1 class="text-5xl font-light text-neutral-900 dark:text-neutral-200">
-        Ben’s film list
-      </h1>
+      <h1 class="text-5xl font-light text-ink-strong">Ben’s film list</h1>
       <p>
         An incomplete list of films released since 2010 that I have enjoyed.
         Provider and certification information is for the United Kingdom and was
@@ -32,7 +30,7 @@ import Tmdb from "./tmdb.svg";
 
     <FilmList />
 
-    <hr class="border-neutral-300 dark:border-neutral-700" />
+    <hr class="border-line" />
 
     <footer class="flex items-center gap-4 text-xs">
       <a href="https://www.themoviedb.org/" aria-label="The Movie Database">

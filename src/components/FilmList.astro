@@ -11,7 +11,7 @@ const { films, genres, providers } = await getData();
       <label for="genre-select">Genre:</label>
       <select
         id="genre-select"
-        class="truncate rounded-sm border border-neutral-300 bg-neutral-200 p-1 dark:border-neutral-700 dark:bg-neutral-800"
+        class="truncate rounded-sm border border-line bg-control p-1"
       >
         <option selected="" value=""> All </option>
         {genres.map((genre) => <option value={genre.id}>{genre.name}</option>)}
@@ -21,7 +21,7 @@ const { films, genres, providers } = await getData();
       <label for="provider-select">Provider:</label>
       <select
         id="provider-select"
-        class="truncate rounded-sm border border-neutral-300 bg-neutral-200 p-1 dark:border-neutral-700 dark:bg-neutral-800"
+        class="truncate rounded-sm border border-line bg-control p-1"
       >
         <option selected="" value=""> All </option>
         {

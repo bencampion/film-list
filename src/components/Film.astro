@@ -13,7 +13,7 @@ const providers = film.providers
 ---
 
 <article
-  class="flex flex-col gap-2 overflow-hidden rounded-sm bg-neutral-100 p-2 text-xs dark:bg-neutral-900"
+  class="flex flex-col gap-2 overflow-hidden rounded-sm bg-card p-2 text-xs"
   data-genre={genres}
   data-provider={providers}
 >
@@ -29,9 +29,7 @@ const providers = film.providers
     />
   </a>
   <ul class="flex items-center">
-    <li
-      class="mr-2 rounded-sm border border-neutral-300 px-1 text-nowrap dark:border-neutral-700"
-    >
+    <li class="mr-2 rounded-sm border border-line px-1 text-nowrap">
       <span class="sr-only">Certificate </span>
       {film.certification}
     </li>
@@ -70,9 +68,7 @@ const providers = film.providers
     </li>
   </ul>
   <p class="grow">{film.overview}</p>
-  <ul
-    class="flex items-center gap-2 border-t border-t-neutral-300 pt-2 sm:min-h-10 dark:border-t-neutral-700"
-  >
+  <ul class="flex items-center gap-2 border-t border-t-line pt-2 sm:min-h-10">
     {
       film.providers?.length ? (
         film.providers.map((provider) => (
